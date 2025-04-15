@@ -1,0 +1,65 @@
+[
+  {
+    "name": "Hot Coffee",
+    "image": "https://cdn.icon8.com/icons/set/hot-coffee",
+    "subMenu": [
+      {"name": "Americano"},
+      {"name": "Café Latte"},
+      {"name": "Cappuccino"},
+      {"name": "Caramel Macchiato"},
+      {"name": "Cold Spanish Latte"},
+      {"name": "Cortado"},
+      {"name": "Espresso"},
+      {"name": "Flat White"},
+      {"name": "Piccolo"}
+    ]
+  },
+  {
+    "name": "Mocktail Drinks",
+    "image": "https://cdn.icon8.com/icons/set/mocktail",
+    "subMenu": [
+      {"name": "Coconut Matcha"},
+      {"name": "Detox Drink"},
+      {"name": "London Iced Tea"},
+      {"name": "Mango Matcha"},
+      {"name": "Matcha Green Cold"},
+      {"name": "Passion Lychee"},
+      {"name": "Peach Cloudy Iced Tea"},
+      {"name": "Signature Mocktail"}
+    ]
+  },
+  {
+    "name": "Frappuccino",
+    "image": "https://cdn.icon8.com/icons/set/frappuccino",
+    "subMenu": [
+      {"name": "Frappuccino"},
+      {"name": "Iced Frappuccino"},
+      {"name": "Oreo Frappe"},
+      {"name": "Supreme Caramel Latte"},
+      {"name": "Supreme French Vanilla"}
+    ]
+  },
+  {
+    "name": "Hot Beverages",
+    "image": "https://cdn.icon8.com/icons/set/hot-beverages",
+    "subMenu": [
+      {"name": "French Vanilla"},
+      {"name": "Green Tea"},
+      {"name": "Hot Chocolate"},
+      {"name": "Milk Tea"},
+      {"name": "Red Tea"},
+      {"name": "Turkish Coffee"}
+    ]
+  },
+  {
+    "name": "Iced Coffees",
+    "image": "https://cdn.icon8.com/icons/set/iced-coffee",
+    "subMenu": [
+      {"name": "Iced Americano"},
+      {"name": "Iced Caramel Macchiato"},
+      {"name": "Iced Latte"},
+      {"name": "Iced Dark Mocha"},
+      {"name": "Iced White Mocha"}
+    ]
+  }
+]
