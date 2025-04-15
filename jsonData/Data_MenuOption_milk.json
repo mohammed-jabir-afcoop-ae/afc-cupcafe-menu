@@ -1,11 +1,11 @@
 {
   "milks": [
-    "Fullfat Milk",
-    "Lowfat Milk",
-    "Soy Milk",
-    "Almond Milk",
-    "Skim Milk",
-    "Oats Milk",
-    "Coconut Milk"
+    { "id": 1, "name": "Fullfat Milk" },
+    { "id": 2, "name": "Lowfat Milk" },
+    { "id": 3, "name": "Soy Milk" },
+    { "id": 4, "name": "Almond Milk" },
+    { "id": 5, "name": "Skim Milk" },
+    { "id": 6, "name": "Oats Milk" },
+    { "id": 7, "name": "Coconut Milk" }
   ]
 }
