@@ -1,6 +1,6 @@
 {
   "sizes": [
-    "Tall",
-    "Grande"
+    { "id": 1, "name": "Tall" },
+    { "id": 2, "name": "Grande" }
   ]
 }
