@@ -9,11 +9,9 @@
       width: 64px;
       height: 64px;
       object-fit: contain;
+      cursor: pointer;
     }
     .order-section {
-      margin-top: 20px;
-    }
-    .qr-code {
       margin-top: 20px;
     }
   </style>
@@ -22,31 +20,37 @@
 
   <h2 class="mb-4">Cup Café Menu</h2>
 
-  <div id="menuContainer" class="row g-3"></div>
+  <div id="mainMenu" class="row g-3 mb-4"></div>
 
-  <div class="row mt-4">
-    <div class="col-md-4">
-      <label>Bean Type:</label>
-      <select id="beanSelect" class="form-select"></select>
-    </div>
-    <div class="col-md-4">
-      <label>Milk Type:</label>
-      <select id="milkSelect" class="form-select"></select>
-    </div>
-    <div class="col-md-4">
-      <label>Size:</label>
-      <select id="sizeSelect" class="form-select"></select>
-    </div>
+  <div id="subMenuSection" class="mb-3" style="display:none;">
+    <h5>Select a Drink</h5>
+    <select id="subMenuSelect" class="form-select"></select>
   </div>
 
-  <div class="text-end mt-3">
-    <button class="btn btn-primary" onclick="addToOrder()">Add to Order</button>
+  <div id="optionsSection" style="display:none;">
+    <div class="row">
+      <div class="col-md-4">
+        <label>Bean Type:</label>
+        <select id="beanSelect" class="form-select"></select>
+      </div>
+      <div class="col-md-4">
+        <label>Milk Type:</label>
+        <select id="milkSelect" class="form-select"></select>
+      </div>
+      <div class="col-md-4">
+        <label>Size:</label>
+        <select id="sizeSelect" class="form-select"></select>
+      </div>
+    </div>
+    <div class="text-end mt-3">
+      <button class="btn btn-primary" onclick="addToOrder()">Add to Order</button>
+    </div>
   </div>
 
   <div class="order-section">
     <h4>Order Summary</h4>
     <ul id="orderList" class="list-group"></ul>
-    <div class="qr-code text-center mt-4">
+    <div class="text-center mt-4">
       <canvas id="qrCanvas"></canvas>
     </div>
   </div>
@@ -55,6 +59,7 @@
   <script src="js/qr-generator.js"></script>
   <script>
     let menuData = [], beans = [], milks = [], sizes = [];
+    let selectedMainMenu = null;
     let orderItems = [];
 
     async function loadJSON(path) {
@@ -68,33 +73,51 @@
       milks = (await loadJSON("jsonData/Data_MenuOption_milk.json")).milks;
       sizes = (await loadJSON("jsonData/Data_MenuOption_size.json")).sizes;
 
-      populateMenu();
-      populateSelect("beanSelect", beans);
-      populateSelect("milkSelect", milks);
-      populateSelect("sizeSelect", sizes);
+      renderMainMenu();
     }
 
-    function populateMenu() {
-      const container = document.getElementById("menuContainer");
-      container.innerHTML = "";
-
+    function renderMainMenu() {
+      const container = document.getElementById("mainMenu");
       menuData.forEach(item => {
         const col = document.createElement("div");
         col.className = "col-4 col-md-2 text-center";
         col.innerHTML = `
-          <img src="${item.image}" alt="${item.name}" class="menu-img rounded-circle border" />
+          <img src="img/${item.id}.png" alt="${item.name}" class="menu-img rounded-circle border" onclick="selectMainMenu(${item.id})" />
           <div class="fw-bold mt-1">${item.name}</div>
-          <select class="form-select mt-2" id="submenu-${item.id}">
-            <option value="">Choose</option>
-            ${item.subMenu.map(sm => `<option value="${sm.id}">${sm.name}</option>`).join('')}
-          </select>
         `;
         container.appendChild(col);
       });
     }
 
+    function selectMainMenu(menuId) {
+      selectedMainMenu = menuData.find(m => m.id === menuId);
+      const select = document.getElementById("subMenuSelect");
+      select.innerHTML = `<option value="">Choose a drink</option>`;
+      selectedMainMenu.subMenu.forEach(sm => {
+        const opt = document.createElement("option");
+        opt.value = sm.id;
+        opt.textContent = sm.name;
+        select.appendChild(opt);
+      });
+      document.getElementById("subMenuSection").style.display = "block";
+      document.getElementById("optionsSection").style.display = "none";
+    }
+
+    document.getElementById("subMenuSelect").addEventListener("change", () => {
+      const val = document.getElementById("subMenuSelect").value;
+      if (val) {
+        populateSelect("beanSelect", beans);
+        populateSelect("milkSelect", milks);
+        populateSelect("sizeSelect", sizes);
+        document.getElementById("optionsSection").style.display = "block";
+      } else {
+        document.getElementById("optionsSection").style.display = "none";
+      }
+    });
+
     function populateSelect(id, options) {
       const select = document.getElementById(id);
+      select.innerHTML = `<option value="">Select</option>`;
       options.forEach(opt => {
         const option = document.createElement("option");
         option.value = opt.id;
@@ -104,7 +127,7 @@
     }
 
     function addToOrder() {
-      const submenuId = getSelectedSubMenu();
+      const submenuId = document.getElementById("subMenuSelect").value;
       const beanId = document.getElementById("beanSelect").value;
       const milkId = document.getElementById("milkSelect").value;
       const sizeId = document.getElementById("sizeSelect").value;
@@ -120,21 +143,13 @@
       generateQRCode(orderItems);
     }
 
-    function getSelectedSubMenu() {
-      for (const item of menuData) {
-        const select = document.getElementById(`submenu-${item.id}`);
-        if (select && select.value) return select.value;
-      }
-      return null;
-    }
-
     function updateOrderList() {
       const list = document.getElementById("orderList");
       list.innerHTML = "";
-      orderItems.forEach((item, idx) => {
+      orderItems.forEach((item, index) => {
         const li = document.createElement("li");
         li.className = "list-group-item";
-        li.textContent = `#${idx + 1}: ${item}`;
+        li.textContent = `#${index + 1}: ${item}`;
         list.appendChild(li);
       });
     }
