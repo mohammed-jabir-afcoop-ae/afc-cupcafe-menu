@@ -1,7 +1,7 @@
 {
   "beans": [
-    "Brazil",
-    "Colombia",
-    "Ethiopia"
+    { "id": 1, "name": "Brazil" },
+    { "id": 2, "name": "Colombia" },
+    { "id": 3, "name": "Ethiopia" }
   ]
 }
