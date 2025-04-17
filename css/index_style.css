@@ -1,52 +1,112 @@
-/* General styles */
+/* General page styles */
 body {
-  background-color: #000; /* Dark background */
-  color: #fff;
+  background-color: #ffffff; /* Set the background to white */
+  font-family: Arial, sans-serif;
+  color: #333;
 }
 
-.menu-img {
+h1, h2, h3 {
+  color: #333;
+}
+
+/* Main menu styles */
+#mainMenuSection {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.main-menu-item {
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+.main-menu-item img {
   width: 100px;
   height: 100px;
   object-fit: cover;
-  cursor: pointer;
-  transition: transform 0.2s ease;
+  border-radius: 50%;
 }
 
-.menu-img:hover {
-  transform: scale(1.05);
+/* Submenu styles */
+#subMenuSection {
+  display: none;
+  margin-top: 20px;
 }
 
-.btn-submenu {
+#subMenuButtons button {
+  background-color: #ddd6f3;
+  color: #333;
   font-weight: 500;
-  border: 2px solid #444;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  padding: 10px;
+  width: 100%;
+}
+
+#subMenuButtons button:hover {
+  background-color: #faaca8;
+}
+
+#changeSubmenuBtn {
+  display: none;
+}
+
+#backToMainBtn {
+  display: none;
+  margin-top: 20px;
+}
+
+#optionsSection {
+  display: none;
+  margin-top: 20px;
+}
+
+/* Table styles */
+#orderTable {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
+}
+
+#orderTable th, #orderTable td {
+  padding: 10px;
   text-align: left;
+  border: 1px solid #ddd;
 }
 
-/* Ensure table fits smaller screens nicely */
-.table-responsive {
-  overflow-x: auto;
+#orderTable th {
+  background-color: #004085; /* Dark blue background */
+  color: white;
 }
 
-.small-option {
-  font-size: 0.85rem;
+#orderTable td {
+  background-color: #f1f8ff; /* Lightest blue for rows */
 }
 
-/* Optional fade-in for main menu */
-.fade-in {
-  animation: fadeIn 0.5s ease-in;
+#orderTable .small-option {
+  font-size: 0.85em;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+#orderTable td button {
+  background-color: #ffc107; /* Bootstrap btn-warning */
+  color: white;
+  border: none;
+  cursor: pointer;
 }
 
-/* QR Code alignment */
+#orderTable td button:hover {
+  background-color: #e0a800;
+}
+
 #qrCanvas {
-  margin-top: 1rem;
+  margin-top: 20px;
 }
 
-/* Hide table columns with d-none */
-.d-none {
-  display: none !important;
+/* Version number */
+footer {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.75em;
+  color: #333;
 }
