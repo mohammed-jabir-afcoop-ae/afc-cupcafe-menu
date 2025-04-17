@@ -1,0 +1,52 @@
+/* General styles */
+body {
+  background-color: #000; /* Dark background */
+  color: #fff;
+}
+
+.menu-img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.menu-img:hover {
+  transform: scale(1.05);
+}
+
+.btn-submenu {
+  font-weight: 500;
+  border: 2px solid #444;
+  text-align: left;
+}
+
+/* Ensure table fits smaller screens nicely */
+.table-responsive {
+  overflow-x: auto;
+}
+
+.small-option {
+  font-size: 0.85rem;
+}
+
+/* Optional fade-in for main menu */
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* QR Code alignment */
+#qrCanvas {
+  margin-top: 1rem;
+}
+
+/* Hide table columns with d-none */
+.d-none {
+  display: none !important;
+}
