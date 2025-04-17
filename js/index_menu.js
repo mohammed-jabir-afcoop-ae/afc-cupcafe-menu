@@ -25,7 +25,7 @@ function selectMainMenu(menuId) {
   subMenuContainer.innerHTML = "";
   selectedMainMenu.subMenu.forEach(sm => {
     const btn = document.createElement("button");
-    btn.className = "btn btn-submenu w-100";
+    btn.className = "btn btn-primary w-100 mb-2 btn-submenu";
     btn.textContent = sm.name;
     btn.onclick = () => selectSubMenu(sm.id);
     subMenuContainer.appendChild(btn);
@@ -39,7 +39,8 @@ function selectSubMenu(subMenuId) {
   selectedSubMenu = subMenuId;
 
   document.querySelectorAll("#subMenuButtons button").forEach(btn => {
-    if (btn.textContent !== selectedMainMenu.subMenu.find(s => s.id === subMenuId).name) {
+    const sub = selectedMainMenu.subMenu.find(s => s.id === subMenuId);
+    if (btn.textContent !== sub.name) {
       btn.style.display = "none";
     }
   });
@@ -135,7 +136,7 @@ function updateOrderTable() {
       <td class="d-none">${item.milk}</td>
       <td class="d-none">${item.size}</td>
       <td class="d-none">${item.code}</td>
-      <td><button class="btn btn-sm btn-danger" onclick="removeItem(${index})">X</button></td>
+      <td><button class="btn btn-sm btn-warning" onclick="removeItem(${index})">X</button></td>
     `;
     tbody.appendChild(row);
   });
