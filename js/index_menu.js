@@ -3,7 +3,7 @@ function renderMainMenu() {
   container.innerHTML = "";
   menuData.forEach(item => {
     const col = document.createElement("div");
-    col.className = "col-4 col-md-2 text-center mb-3 main-menu-item fade-in";
+    col.className = "col-4 col-md-2 text-center mb-3 main-menu-item fade-smooth show";
     col.dataset.id = item.id;
     col.innerHTML = `
       <img src="img/${item.id}.png" alt="${item.name}" class="menu-img rounded-circle border" onclick="selectMainMenu(${item.id})" />
@@ -11,27 +11,35 @@ function renderMainMenu() {
     `;
     container.appendChild(col);
   });
-  document.getElementById("mainMenuSection").style.display = "flex";
+
+  const section = document.getElementById("mainMenuSection");
+  section.style.display = "flex";
+  section.classList.add("fade-smooth", "show");
+
   document.getElementById("backToMainBtn").style.display = "none";
 }
 
 function selectMainMenu(menuId) {
   selectedMainMenu = menuData.find(m => m.id === menuId);
+
   document.querySelectorAll(".main-menu-item").forEach(el => {
-    if (el.dataset.id != menuId) el.style.display = "none";
+    if (el.dataset.id != menuId) el.classList.remove("show");
   });
 
   const subMenuContainer = document.getElementById("subMenuButtons");
   subMenuContainer.innerHTML = "";
   selectedMainMenu.subMenu.forEach(sm => {
     const btn = document.createElement("button");
-    btn.className = "btn btn-primary w-100 mb-2 btn-submenu";
+    btn.className = "btn btn-primary w-100 mb-2 btn-submenu fade-smooth show";
     btn.textContent = sm.name;
     btn.onclick = () => selectSubMenu(sm.id);
     subMenuContainer.appendChild(btn);
   });
 
-  document.getElementById("subMenuSection").style.display = "block";
+  const subMenuSection = document.getElementById("subMenuSection");
+  subMenuSection.style.display = "block";
+  subMenuSection.classList.add("fade-smooth", "show");
+
   document.getElementById("backToMainBtn").style.display = "inline-block";
 }
 
@@ -39,13 +47,21 @@ function selectSubMenu(subMenuId) {
   selectedSubMenu = subMenuId;
 
   document.querySelectorAll("#subMenuButtons button").forEach(btn => {
-    if (btn.textContent !== selectedMainMenu.subMenu.find(s => s.id === subMenuId).name) {
-      btn.style.display = "none";
+    const match = selectedMainMenu.subMenu.find(s => s.id === subMenuId);
+    if (btn.textContent !== match.name) {
+      btn.classList.remove("show");
     }
   });
 
-  document.getElementById("changeSubmenuBtn").style.display = "inline-block";
-  document.getElementById("optionsSection").style.display = "block";
+  const changeBtn = document.getElementById("changeSubmenuBtn");
+  const optionSec = document.getElementById("optionsSection");
+
+  changeBtn.style.display = "inline-block";
+  changeBtn.classList.add("fade-smooth", "show");
+
+  optionSec.style.display = "block";
+  optionSec.classList.add("fade-smooth", "show");
+
   populateSelect("beanSelect", beans);
   populateSelect("milkSelect", milks);
   populateSelect("sizeSelect", sizes);
@@ -53,7 +69,7 @@ function selectSubMenu(subMenuId) {
 
 function resetSubmenu() {
   selectedSubMenu = null;
-  document.querySelectorAll("#subMenuButtons button").forEach(btn => btn.style.display = "block");
+  document.querySelectorAll("#subMenuButtons button").forEach(btn => btn.classList.add("show"));
   document.getElementById("changeSubmenuBtn").style.display = "none";
   document.getElementById("optionsSection").style.display = "none";
   clearSelect("beanSelect");
@@ -64,7 +80,8 @@ function resetSubmenu() {
 function goBackToMainMenu() {
   selectedMainMenu = null;
   selectedSubMenu = null;
-  document.querySelectorAll(".main-menu-item").forEach(item => item.style.display = "block");
+  document.querySelectorAll(".main-menu-item").forEach(item => item.classList.add("show"));
+
   document.getElementById("subMenuSection").style.display = "none";
   document.getElementById("optionsSection").style.display = "none";
   document.getElementById("backToMainBtn").style.display = "none";
@@ -120,6 +137,7 @@ function updateOrderTable() {
   tbody.innerHTML = "";
   orderItems.forEach((item, index) => {
     const row = document.createElement("tr");
+    row.classList.add("fade-smooth", "show");
     row.innerHTML = `
       <td>${index + 1}</td>
       <td>
