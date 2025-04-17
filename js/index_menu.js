@@ -39,8 +39,7 @@ function selectSubMenu(subMenuId) {
   selectedSubMenu = subMenuId;
 
   document.querySelectorAll("#subMenuButtons button").forEach(btn => {
-    const sub = selectedMainMenu.subMenu.find(s => s.id === subMenuId);
-    if (btn.textContent !== sub.name) {
+    if (btn.textContent !== selectedMainMenu.subMenu.find(s => s.id === subMenuId).name) {
       btn.style.display = "none";
     }
   });
