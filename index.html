@@ -19,6 +19,12 @@
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    .btn-submenu {
+      background: linear-gradient(to right, #f0f0f0, #e0e0e0);
+      color: #000;
+      font-weight: 500;
+      border: 1px solid #ccc;
+    }
   </style>
 </head>
 <body class="bg-light">
@@ -67,12 +73,13 @@
         <table class="table table-bordered table-striped" id="orderTable">
           <thead class="table-light">
             <tr>
-              <th>Main Menu</th>
-              <th>Submenu</th>
-              <th>Bean</th>
-              <th>Milk</th>
-              <th>Size</th>
-              <th>Item Code</th>
+              <th>Selection Item</th>
+              <th class="d-none">Main Menu</th>
+              <th class="d-none">Submenu</th>
+              <th class="d-none">Bean</th>
+              <th class="d-none">Milk</th>
+              <th class="d-none">Size</th>
+              <th class="d-none">Item Code</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -152,13 +159,14 @@
 
       selectedMainMenu.subMenu.forEach(sm => {
         const btn = document.createElement("button");
-        btn.className = "btn btn-outline-primary w-100";
+        btn.className = "btn btn-submenu w-100";
         btn.textContent = sm.name;
         btn.onclick = () => selectSubMenu(sm.id);
         subMenuContainer.appendChild(btn);
       });
 
       document.getElementById("subMenuSection").style.display = "block";
+      document.getElementById("subMenuButtons").style.display = "flex";
     }
 
     function goBackToMainMenu() {
@@ -234,12 +242,19 @@
       orderItems.forEach(item => {
         const row = document.createElement("tr");
         row.innerHTML = `
-          <td>${item.main}</td>
-          <td>${item.sub}</td>
-          <td>${item.bean}</td>
-          <td>${item.milk}</td>
-          <td>${item.size}</td>
-          <td>${item.code}</td>
+          <td>
+            <strong>${item.sub}</strong><br/>
+            Bean: ${item.bean}<br/>
+            Milk: ${item.milk}<br/>
+            Size: ${item.size}<br/>
+            <small class="text-muted">Code: ${item.code}</small>
+          </td>
+          <td class="d-none">${item.main}</td>
+          <td class="d-none">${item.sub}</td>
+          <td class="d-none">${item.bean}</td>
+          <td class="d-none">${item.milk}</td>
+          <td class="d-none">${item.size}</td>
+          <td class="d-none">${item.code}</td>
         `;
         tbody.appendChild(row);
       });
