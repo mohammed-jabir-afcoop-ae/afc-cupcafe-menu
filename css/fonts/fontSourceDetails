@@ -1,0 +1,32 @@
+Steps to Self-Host Fonts
+
+Download URLs
+✅ Nunito
+Google Fonts page: https://fonts.google.com/specimen/Nunito
+
+Recommended weights:
+
+400 Regular
+
+700 Bold
+
+Click "Download Family" to get all styles, or customize the selection.
+
+✅ Baloo 2
+Google Fonts page: https://fonts.google.com/specimen/Baloo+2
+
+Recommended weights:
+
+400 Regular
+
+600 SemiBold
+
+Click "Download Family", or pick only those two weights.
+
+/fonts/
+├── Baloo2/
+│   ├── Baloo2-Regular.woff2
+│   └── Baloo2-SemiBold.woff2
+├── Nunito/
+│   ├── Nunito-Regular.woff2
+│   └── Nunito-Bold.woff2
