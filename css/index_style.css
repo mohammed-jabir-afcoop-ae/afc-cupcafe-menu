@@ -1,31 +1,7 @@
-/* Baloo 2 - Fun, Rounded */
-@font-face {
-  font-family: 'Baloo 2';
-  src: url('fonts/Baloo2-Regular.woff2') format('woff2');
-  font-weight: 400;
-}
-@font-face {
-  font-family: 'Baloo 2';
-  src: url('fonts/Baloo2-SemiBold.woff2') format('woff2');
-  font-weight: 600;
-}
-
-/* Nunito - Clean, Modern */
-@font-face {
-  font-family: 'Nunito';
-  src: url('fonts/Nunito-Regular.woff2') format('woff2');
-  font-weight: 400;
-}
-@font-face {
-  font-family: 'Nunito';
-  src: url('fonts/Nunito-Bold.woff2') format('woff2');
-  font-weight: 700;
-}
-
 /* General page styles */
 body {
   background-color: #ffffff; /* Set the background to white */
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Segoe UI', sans-serif;
   color: #333;
 }
 
@@ -34,7 +10,7 @@ h1, h2, h3 {
 }
 
 h1, h2, .btn, .menu-img + div {
-  font-family: 'Baloo 2', cursive;
+  font-family: 'Segoe UI', cursive;
 }
 
 /* Main menu styles */
