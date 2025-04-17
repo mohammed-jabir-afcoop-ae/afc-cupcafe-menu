@@ -27,10 +27,34 @@
     }
 
     .btn-submenu {
-      background-color: #fff7f0;
+      background-image: -webkit-linear-gradient(top, #ddd6f3, #faaca8);
+      background-image: -moz-linear-gradient(top, #ddd6f3, #faaca8);
+      background-image: -o-linear-gradient(top, #ddd6f3, #faaca8);
+      background-image: linear-gradient(to bottom, #ddd6f3, #faaca8);
       color: #333;
       font-weight: 500;
       border: 1px solid #ccc;
+    }
+
+    .table thead {
+      background-color: #003366;
+      color: white;
+    }
+
+    .table tbody tr {
+      background-color: #eaf3fc;
+    }
+
+    .small-option {
+      padding-left: 1rem;
+      font-size: 0.9rem;
+    }
+
+    footer {
+      font-size: 0.6rem;
+      text-align: center;
+      margin-top: 2rem;
+      color: gray;
     }
   </style>
 </head>
@@ -48,6 +72,7 @@
   <div id="subMenuSection" class="my-4" style="display:none;">
     <h5>Select a Drink</h5>
     <div id="subMenuButtons" class="d-flex flex-column gap-2 fade-in"></div>
+    <button id="changeSubmenuBtn" class="btn btn-sm btn-outline-secondary mt-2" style="display: none;" onclick="resetSubmenu()">Change Selection</button>
   </div>
 
   <div id="optionsSection" class="my-4" style="display:none;">
@@ -72,9 +97,10 @@
   <div class="my-4">
     <h5>Order Summary</h5>
     <div class="table-responsive">
-      <table class="table table-bordered table-striped" id="orderTable">
-        <thead class="table-light">
+      <table class="table table-bordered" id="orderTable">
+        <thead>
           <tr>
+            <th>#</th>
             <th>Selection Item</th>
             <th class="d-none">Main Menu</th>
             <th class="d-none">Submenu</th>
@@ -82,6 +108,7 @@
             <th class="d-none">Milk</th>
             <th class="d-none">Size</th>
             <th class="d-none">Item Code</th>
+            <th>X</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -91,13 +118,12 @@
   </div>
 </div>
 
-<!-- QR Generator -->
-<script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+<footer>Version: 250417.1303</footer>
 
+<script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
 <script>
   let menuData = [], beans = [], milks = [], sizes = [];
-  let selectedMainMenu = null;
-  let selectedSubMenu = null;
+  let selectedMainMenu = null, selectedSubMenu = null;
   let orderItems = [];
 
   async function loadJSON(path) {
@@ -137,27 +163,14 @@
       `;
       container.appendChild(col);
     });
-
     document.getElementById("mainMenuSection").style.display = "flex";
     document.getElementById("backToMainBtn").style.display = "none";
   }
 
   function selectMainMenu(menuId) {
     selectedMainMenu = menuData.find(m => m.id === menuId);
-    selectedSubMenu = null;
-
-    document.querySelectorAll(".main-menu-item").forEach(item => {
-      if (parseInt(item.dataset.id) !== menuId) {
-        item.style.display = "none";
-      }
-    });
-
-    document.getElementById("backToMainBtn").style.display = "inline-block";
-    document.getElementById("optionsSection").style.display = "none";
-
     const subMenuContainer = document.getElementById("subMenuButtons");
     subMenuContainer.innerHTML = "";
-
     selectedMainMenu.subMenu.forEach(sm => {
       const btn = document.createElement("button");
       btn.className = "btn btn-submenu w-100";
@@ -165,46 +178,66 @@
       btn.onclick = () => selectSubMenu(sm.id);
       subMenuContainer.appendChild(btn);
     });
-
     document.getElementById("subMenuSection").style.display = "block";
+    document.getElementById("backToMainBtn").style.display = "inline-block";
+  }
+
+  function selectSubMenu(subMenuId) {
+    selectedSubMenu = subMenuId;
+
+    // Hide other submenu buttons
+    const buttons = document.querySelectorAll("#subMenuButtons button");
+    buttons.forEach(btn => {
+      if (btn.textContent !== selectedMainMenu.subMenu.find(s => s.id === subMenuId).name) {
+        btn.style.display = "none";
+      }
+    });
+
+    // Show change selection option
+    document.getElementById("changeSubmenuBtn").style.display = "inline-block";
+
+    // Show options
+    document.getElementById("optionsSection").style.display = "block";
+    populateSelect("beanSelect", beans);
+    populateSelect("milkSelect", milks);
+    populateSelect("sizeSelect", sizes);
+  }
+
+  function resetSubmenu() {
+    selectedSubMenu = null;
     document.getElementById("subMenuButtons").style.display = "flex";
+    document.querySelectorAll("#subMenuButtons button").forEach(btn => btn.style.display = "block");
+    document.getElementById("changeSubmenuBtn").style.display = "none";
+    document.getElementById("optionsSection").style.display = "none";
+    clearSelect("beanSelect");
+    clearSelect("milkSelect");
+    clearSelect("sizeSelect");
   }
 
   function goBackToMainMenu() {
     selectedMainMenu = null;
     selectedSubMenu = null;
-
-    document.querySelectorAll(".main-menu-item").forEach(item => {
-      item.style.display = "block";
-    });
-
+    document.querySelectorAll(".main-menu-item").forEach(item => item.style.display = "block");
     document.getElementById("subMenuSection").style.display = "none";
-    document.getElementById("subMenuButtons").innerHTML = "";
     document.getElementById("optionsSection").style.display = "none";
     document.getElementById("backToMainBtn").style.display = "none";
-  }
-
-  function selectSubMenu(subMenuId) {
-    selectedSubMenu = subMenuId;
-    document.getElementById("subMenuButtons").style.display = "none";
-    document.getElementById("optionsSection").style.display = "block";
-
-    populateSelect("beanSelect", beans);
-    populateSelect("milkSelect", milks);
-    populateSelect("sizeSelect", sizes);
+    resetSubmenu();
   }
 
   function populateSelect(selectId, list) {
     const select = document.getElementById(selectId);
     select.innerHTML = "";
     if (!Array.isArray(list)) return;
-
     list.forEach(opt => {
       const option = document.createElement("option");
       option.value = opt.id;
       option.textContent = opt.name;
       select.appendChild(option);
     });
+  }
+
+  function clearSelect(id) {
+    document.getElementById(id).innerHTML = "";
   }
 
   function addToOrder() {
@@ -218,7 +251,7 @@
     }
 
     const subMenu = selectedMainMenu.subMenu.find(sm => sm.id === selectedSubMenu);
-    const itemNumber = `${selectedSubMenu}${beanId}${milkId}${sizeId}`;
+    const itemCode = `${selectedSubMenu}${beanId}${milkId}${sizeId}`;
 
     const row = {
       main: selectedMainMenu.name,
@@ -226,28 +259,28 @@
       bean: beans.find(b => b.id == beanId).name,
       milk: milks.find(m => m.id == milkId).name,
       size: sizes.find(s => s.id == sizeId).name,
-      code: itemNumber
+      code: itemCode
     };
 
     orderItems.push(row);
     updateOrderTable();
     generateQRCode(orderItems.map(i => i.code));
-
     goBackToMainMenu();
   }
 
   function updateOrderTable() {
     const tbody = document.querySelector("#orderTable tbody");
     tbody.innerHTML = "";
-    orderItems.forEach(item => {
+    orderItems.forEach((item, index) => {
       const row = document.createElement("tr");
       row.innerHTML = `
+        <td>${index + 1}</td>
         <td>
           <strong>${item.sub}</strong><br/>
-          Bean: ${item.bean}<br/>
-          Milk: ${item.milk}<br/>
-          Size: ${item.size}<br/>
-          <small class="text-muted">Code: ${item.code}</small>
+          <div class="small-option">Bean: ${item.bean}</div>
+          <div class="small-option">Milk: ${item.milk}</div>
+          <div class="small-option">Size: ${item.size}</div>
+          <div class="small-option text-muted">Code: ${item.code}</div>
         </td>
         <td class="d-none">${item.main}</td>
         <td class="d-none">${item.sub}</td>
@@ -255,9 +288,16 @@
         <td class="d-none">${item.milk}</td>
         <td class="d-none">${item.size}</td>
         <td class="d-none">${item.code}</td>
+        <td><button class="btn btn-sm btn-danger" onclick="removeItem(${index})">X</button></td>
       `;
       tbody.appendChild(row);
     });
+  }
+
+  function removeItem(index) {
+    orderItems.splice(index, 1);
+    updateOrderTable();
+    generateQRCode(orderItems.map(i => i.code));
   }
 
   function generateQRCode(dataArray) {
