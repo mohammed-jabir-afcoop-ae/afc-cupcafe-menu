@@ -1,0 +1,47 @@
+body {
+  background-color: #fefefe;
+}
+
+.menu-img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.btn-submenu {
+  background-color: #ffffff;
+  color: #2979FF;
+  font-weight: 500;
+  border: 2px solid #444;
+}
+
+.table thead {
+  background-color: #003366;
+  color: white;
+}
+
+.table tbody tr {
+  background-color: #eaf3fc;
+}
+
+.small-option {
+  padding-left: 1rem;
+  font-size: 0.9rem;
+}
+
+footer {
+  font-size: 0.6rem;
+  text-align: center;
+  margin-top: 2rem;
+  color: gray;
+}
