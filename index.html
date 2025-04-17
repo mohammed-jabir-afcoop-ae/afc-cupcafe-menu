@@ -20,7 +20,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
     .btn-submenu {
-      background: linear-gradient(to right, #f0f0f0, #e0e0e0);
+      background: linear-gradient(to right, #f9f9f9, #eaeaea);
       color: #000;
       font-weight: 500;
       border: 1px solid #ccc;
@@ -185,14 +185,12 @@
 
     function selectSubMenu(subMenuId) {
       selectedSubMenu = subMenuId;
-
       document.getElementById("subMenuButtons").style.display = "none";
-
-      populateSelect("beanSelect", beans);
-      populateSelect("milkSelect", milks);
-      populateSelect("sizeSelect", sizes);
-
       document.getElementById("optionsSection").style.display = "block";
+
+      populateSelect("beanSelect", Array.isArray(beans) ? beans : []);
+      populateSelect("milkSelect", Array.isArray(milks) ? milks : []);
+      populateSelect("sizeSelect", Array.isArray(sizes) ? sizes : []);
     }
 
     function populateSelect(selectId, list) {
