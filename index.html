@@ -12,6 +12,13 @@
       object-fit: cover;
       cursor: pointer;
     }
+    .fade-in {
+      animation: fadeIn 0.4s ease-in-out forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body class="bg-light">
@@ -19,16 +26,21 @@
   <div class="container py-4">
     <h2 class="text-center mb-4">☕ CupCafe Menu</h2>
 
-    <!-- Main Menu -->
-    <div class="row justify-content-center" id="mainMenu"></div>
-
-    <!-- SubMenu Buttons -->
-    <div id="subMenuSection" class="my-4" style="display:none;">
-      <h5>Select a Drink</h5>
-      <div id="subMenuButtons" class="d-flex flex-wrap gap-2"></div>
+    <!-- Back Button -->
+    <div class="text-start my-3">
+      <button id="backToMainBtn" class="btn btn-secondary" onclick="goBackToMainMenu()" style="display: none;">← Back to Main Menu</button>
     </div>
 
-    <!-- Options -->
+    <!-- Main Menu Section -->
+    <div id="mainMenuSection" class="row justify-content-center fade-in"></div>
+
+    <!-- SubMenu Section -->
+    <div id="subMenuSection" class="my-4" style="display:none;">
+      <h5>Select a Drink</h5>
+      <div id="subMenuButtons" class="d-flex flex-column gap-2 fade-in"></div>
+    </div>
+
+    <!-- Customization Options -->
     <div id="optionsSection" class="my-4" style="display:none;">
       <h5>Customize Your Drink</h5>
       <div class="row">
@@ -48,10 +60,24 @@
       <button class="btn btn-success mt-3" onclick="addToOrder()">Add to Order</button>
     </div>
 
-    <!-- Order List -->
+    <!-- Order Summary -->
     <div class="my-4">
       <h5>Order Summary</h5>
-      <ul id="orderList" class="list-group mb-3"></ul>
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped" id="orderTable">
+          <thead class="table-light">
+            <tr>
+              <th>Main Menu</th>
+              <th>Submenu</th>
+              <th>Bean</th>
+              <th>Milk</th>
+              <th>Size</th>
+              <th>Item Code</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
       <canvas id="qrCanvas"></canvas>
     </div>
   </div>
@@ -90,40 +116,70 @@
     }
 
     function renderMainMenu() {
-      const container = document.getElementById("mainMenu");
+      const container = document.getElementById("mainMenuSection");
       container.innerHTML = "";
       menuData.forEach(item => {
         const col = document.createElement("div");
-        col.className = "col-4 col-md-2 text-center mb-3";
+        col.className = "col-4 col-md-2 text-center mb-3 main-menu-item fade-in";
+        col.dataset.id = item.id;
         col.innerHTML = `
           <img src="img/${item.id}.png" alt="${item.name}" class="menu-img rounded-circle border" onclick="selectMainMenu(${item.id})" />
           <div class="fw-bold mt-1">${item.name}</div>
         `;
         container.appendChild(col);
       });
+
+      document.getElementById("mainMenuSection").style.display = "flex";
+      document.getElementById("backToMainBtn").style.display = "none";
     }
 
     function selectMainMenu(menuId) {
       selectedMainMenu = menuData.find(m => m.id === menuId);
       selectedSubMenu = null;
+
+      // Hide other main menu items
+      document.querySelectorAll(".main-menu-item").forEach(item => {
+        if (parseInt(item.dataset.id) !== menuId) {
+          item.style.display = "none";
+        }
+      });
+
+      document.getElementById("backToMainBtn").style.display = "inline-block";
       document.getElementById("optionsSection").style.display = "none";
 
       const subMenuContainer = document.getElementById("subMenuButtons");
       subMenuContainer.innerHTML = "";
+      subMenuContainer.style.display = "flex";
 
       selectedMainMenu.subMenu.forEach(sm => {
         const btn = document.createElement("button");
-        btn.className = "btn btn-outline-primary";
+        btn.className = "btn btn-outline-primary w-100";
         btn.textContent = sm.name;
         btn.onclick = () => selectSubMenu(sm.id);
+        btn.dataset.subName = sm.name;
         subMenuContainer.appendChild(btn);
       });
 
       document.getElementById("subMenuSection").style.display = "block";
     }
 
+    function goBackToMainMenu() {
+      selectedMainMenu = null;
+      selectedSubMenu = null;
+
+      document.querySelectorAll(".main-menu-item").forEach(item => {
+        item.style.display = "block";
+      });
+
+      document.getElementById("subMenuSection").style.display = "none";
+      document.getElementById("optionsSection").style.display = "none";
+      document.getElementById("backToMainBtn").style.display = "none";
+    }
+
     function selectSubMenu(subMenuId) {
       selectedSubMenu = subMenuId;
+
+      document.getElementById("subMenuButtons").style.display = "none";
 
       populateSelect("beanSelect", beans);
       populateSelect("milkSelect", milks);
@@ -153,20 +209,40 @@
         return;
       }
 
+      const subMenu = selectedMainMenu.subMenu.find(sm => sm.id === selectedSubMenu);
       const itemNumber = `${selectedSubMenu}${beanId}${milkId}${sizeId}`;
-      orderItems.push(itemNumber);
-      updateOrderList();
-      generateQRCode(orderItems);
+
+      const row = {
+        main: selectedMainMenu.name,
+        sub: subMenu.name,
+        bean: beans.find(b => b.id == beanId).name,
+        milk: milks.find(m => m.id == milkId).name,
+        size: sizes.find(s => s.id == sizeId).name,
+        code: itemNumber
+      };
+
+      orderItems.push(row);
+      updateOrderTable();
+      generateQRCode(orderItems.map(i => i.code));
+
+      // Reset for next selection
+      goBackToMainMenu();
     }
 
-    function updateOrderList() {
-      const list = document.getElementById("orderList");
-      list.innerHTML = "";
+    function updateOrderTable() {
+      const tbody = document.querySelector("#orderTable tbody");
+      tbody.innerHTML = "";
       orderItems.forEach(item => {
-        const li = document.createElement("li");
-        li.className = "list-group-item";
-        li.textContent = item;
-        list.appendChild(li);
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${item.main}</td>
+          <td>${item.sub}</td>
+          <td>${item.bean}</td>
+          <td>${item.milk}</td>
+          <td>${item.size}</td>
+          <td>${item.code}</td>
+        `;
+        tbody.appendChild(row);
       });
     }
 
