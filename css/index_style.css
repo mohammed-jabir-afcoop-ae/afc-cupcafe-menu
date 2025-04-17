@@ -1,6 +1,6 @@
 /* General page styles */
 body {
-  background-color: #ffffff; /* Set the background to white */
+  background-color: #ffffff;
   font-family: 'Segoe UI', sans-serif;
   color: #333;
 }
@@ -13,6 +13,18 @@ h1, h2, .btn, .menu-img + div {
   font-family: 'Segoe UI', cursive;
 }
 
+/* Transitions */
+.fade-smooth {
+  transition: all 0.4s ease-in-out;
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.fade-smooth.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
 /* Main menu styles */
 #mainMenuSection {
   display: flex;
@@ -23,6 +35,11 @@ h1, h2, .btn, .menu-img + div {
 .main-menu-item {
   cursor: pointer;
   margin-bottom: 15px;
+  transition: transform 0.3s ease;
+}
+
+.main-menu-item:hover {
+  transform: scale(1.05);
 }
 
 .main-menu-item img {
@@ -39,7 +56,8 @@ h1, h2, .btn, .menu-img + div {
 }
 
 #subMenuButtons button {
-  background-color: #00008b;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  background-color: #0d6efd; /* Bootstrap btn-primary */
   color: #ffffff;
   font-weight: 500;
   border: 1px solid #ccc;
@@ -49,21 +67,22 @@ h1, h2, .btn, .menu-img + div {
 }
 
 #subMenuButtons button:hover {
-  background-color: #fffff;
+  background-color: #0b5ed7;
+  transform: scale(1.02);
 }
 
-#changeSubmenuBtn {
-  display: none;
-}
-
+#changeSubmenuBtn,
 #backToMainBtn {
   display: none;
   margin-top: 20px;
+  transition: opacity 0.3s ease;
 }
 
+/* Options Section */
 #optionsSection {
   display: none;
   margin-top: 20px;
+  transition: opacity 0.3s ease;
 }
 
 /* Table styles */
@@ -80,12 +99,17 @@ h1, h2, .btn, .menu-img + div {
 }
 
 #orderTable th {
-  background-color: #004085; /* Dark blue background */
+  background-color: #004085;
   color: white;
 }
 
 #orderTable td {
-  background-color: #f1f8ff; /* Lightest blue for rows */
+  background-color: #f1f8ff;
+  transition: background-color 0.3s ease;
+}
+
+#orderTable tr:hover td {
+  background-color: #e1f0ff;
 }
 
 #orderTable .small-option {
@@ -93,14 +117,16 @@ h1, h2, .btn, .menu-img + div {
 }
 
 #orderTable td button {
-  background-color: #ffc107; /* Bootstrap btn-warning */
+  background-color: #ffc107;
   color: white;
   border: none;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 #orderTable td button:hover {
   background-color: #e0a800;
+  transform: scale(1.05);
 }
 
 #qrCanvas {
