@@ -149,14 +149,12 @@
 
       const subMenuContainer = document.getElementById("subMenuButtons");
       subMenuContainer.innerHTML = "";
-      subMenuContainer.style.display = "flex";
 
       selectedMainMenu.subMenu.forEach(sm => {
         const btn = document.createElement("button");
         btn.className = "btn btn-outline-primary w-100";
         btn.textContent = sm.name;
         btn.onclick = () => selectSubMenu(sm.id);
-        btn.dataset.subName = sm.name;
         subMenuContainer.appendChild(btn);
       });
 
@@ -172,6 +170,7 @@
       });
 
       document.getElementById("subMenuSection").style.display = "none";
+      document.getElementById("subMenuButtons").innerHTML = "";
       document.getElementById("optionsSection").style.display = "none";
       document.getElementById("backToMainBtn").style.display = "none";
     }
@@ -225,7 +224,7 @@
       updateOrderTable();
       generateQRCode(orderItems.map(i => i.code));
 
-      // Reset for next selection
+      // Reset view
       goBackToMainMenu();
     }
 
