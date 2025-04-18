@@ -88,8 +88,7 @@ function resetSubmenu() {
   selectedSubMenu = null;
 
   document.querySelectorAll("#subMenuButtons button").forEach(btn => {
-    btn.classList.remove("hidden", "fade-out");
-    btn.classList.add("fade-in");
+    showElement(btn);
   });
 
   hideElement(document.getElementById("changeSubmenuBtn"));
