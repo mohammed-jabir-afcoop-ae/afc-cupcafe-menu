@@ -23,44 +23,48 @@ function selectMainMenu(menuId) {
   selectedMainMenu = menuData.find(m => m.id === menuId);
 
   document.querySelectorAll(".main-menu-item").forEach(el => {
-    if (el.dataset.id != menuId) el.classList.remove("show");
+    if (el.dataset.id != menuId) {
+      el.classList.add("fade-out");
+      setTimeout(() => el.classList.add("hidden"), 300); // after fade-out, hide it
+    }
   });
 
   const subMenuContainer = document.getElementById("subMenuButtons");
   subMenuContainer.innerHTML = "";
   selectedMainMenu.subMenu.forEach(sm => {
     const btn = document.createElement("button");
-    btn.className = "btn btn-primary w-100 mb-2 btn-submenu fade-smooth show";
+    btn.className = "btn btn-primary w-100 mb-2 btn-submenu fade-in";
     btn.textContent = sm.name;
     btn.onclick = () => selectSubMenu(sm.id);
     subMenuContainer.appendChild(btn);
   });
 
   const subMenuSection = document.getElementById("subMenuSection");
-  subMenuSection.style.display = "block";
-  subMenuSection.classList.add("fade-smooth", "show");
+  subMenuSection.classList.remove("hidden");
+  subMenuSection.classList.add("fade-in");
 
-  document.getElementById("backToMainBtn").style.display = "inline-block";
+  document.getElementById("backToMainBtn").classList.remove("hidden");
 }
 
 function selectSubMenu(subMenuId) {
   selectedSubMenu = subMenuId;
 
+  const match = selectedMainMenu.subMenu.find(s => s.id === subMenuId);
   document.querySelectorAll("#subMenuButtons button").forEach(btn => {
-    const match = selectedMainMenu.subMenu.find(s => s.id === subMenuId);
     if (btn.textContent !== match.name) {
-      btn.classList.remove("show");
+      btn.classList.add("fade-out");
+      setTimeout(() => btn.classList.add("hidden"), 300);
     }
   });
 
   const changeBtn = document.getElementById("changeSubmenuBtn");
   const optionSec = document.getElementById("optionsSection");
 
-  changeBtn.style.display = "inline-block";
-  changeBtn.classList.add("fade-smooth", "show");
+  changeBtn.classList.remove("hidden");
+  changeBtn.classList.add("fade-in");
 
-  optionSec.style.display = "block";
-  optionSec.classList.add("fade-smooth", "show");
+  optionSec.classList.remove("hidden");
+  optionSec.classList.add("fade-in");
 
   populateSelect("beanSelect", beans);
   populateSelect("milkSelect", milks);
@@ -69,9 +73,15 @@ function selectSubMenu(subMenuId) {
 
 function resetSubmenu() {
   selectedSubMenu = null;
-  document.querySelectorAll("#subMenuButtons button").forEach(btn => btn.classList.add("show"));
-  document.getElementById("changeSubmenuBtn").style.display = "none";
-  document.getElementById("optionsSection").style.display = "none";
+
+  document.querySelectorAll("#subMenuButtons button").forEach(btn => {
+    btn.classList.remove("hidden", "fade-out");
+    btn.classList.add("fade-in");
+  });
+
+  document.getElementById("changeSubmenuBtn").classList.add("hidden");
+  document.getElementById("optionsSection").classList.add("hidden");
+
   clearSelect("beanSelect");
   clearSelect("milkSelect");
   clearSelect("sizeSelect");
@@ -80,11 +90,16 @@ function resetSubmenu() {
 function goBackToMainMenu() {
   selectedMainMenu = null;
   selectedSubMenu = null;
-  document.querySelectorAll(".main-menu-item").forEach(item => item.classList.add("show"));
 
-  document.getElementById("subMenuSection").style.display = "none";
-  document.getElementById("optionsSection").style.display = "none";
-  document.getElementById("backToMainBtn").style.display = "none";
+  document.querySelectorAll(".main-menu-item").forEach(item => {
+    item.classList.remove("hidden", "fade-out");
+    item.classList.add("fade-in");
+  });
+
+  document.getElementById("subMenuSection").classList.add("hidden");
+  document.getElementById("optionsSection").classList.add("hidden");
+  document.getElementById("backToMainBtn").classList.add("hidden");
+
   resetSubmenu();
 }
 
