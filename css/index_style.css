@@ -38,6 +38,30 @@ h1, h2, .btn, .menu-img + div {
   display: none !important;
 }
 
+/* Smooth fade-in effect */
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 0.3s forwards;
+}
+
+/* Smooth fade-out effect */
+.fade-out {
+  opacity: 1;
+  animation: fadeOut 0.3s forwards;
+}
+
+/* Keyframes */
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(10px); }
+}
+
+
 /* Main menu styles */
 #mainMenuSection {
   display: flex;
