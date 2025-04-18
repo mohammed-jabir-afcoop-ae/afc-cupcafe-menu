@@ -12,10 +12,15 @@ function showElement(el) {
 }
 
 function hideElement(el) {
+  if (!el) return;
   el.classList.remove("fade-in");
   el.classList.add("fade-out");
-  setTimeout(() => el.classList.add("hidden"), 300);
+  setTimeout(() => {
+    el.classList.add("hidden");
+    el.style.display = "none";
+  }, 300); // match fade duration
 }
+
 
 // Render main menu
 function renderMainMenu() {
