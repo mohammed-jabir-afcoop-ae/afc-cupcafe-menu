@@ -1,3 +1,16 @@
+// ✨ Helper functions for consistent show/hide animations
+function showElement(el) {
+  el.classList.remove("hidden", "fade-out");
+  el.classList.add("fade-in");
+}
+
+function hideElement(el) {
+  el.classList.remove("fade-in");
+  el.classList.add("fade-out");
+  setTimeout(() => el.classList.add("hidden"), 300);
+}
+
+// Render main menu
 function renderMainMenu() {
   const container = document.getElementById("mainMenuSection");
   container.innerHTML = "";
@@ -16,17 +29,15 @@ function renderMainMenu() {
   section.style.display = "flex";
   section.classList.add("fade-smooth", "show");
 
-  document.getElementById("backToMainBtn").style.display = "none";
+  document.getElementById("backToMainBtn").classList.add("hidden");
 }
 
+// Handle main menu selection
 function selectMainMenu(menuId) {
   selectedMainMenu = menuData.find(m => m.id === menuId);
 
   document.querySelectorAll(".main-menu-item").forEach(el => {
-    if (el.dataset.id != menuId) {
-      el.classList.add("fade-out");
-      setTimeout(() => el.classList.add("hidden"), 300); // after fade-out, hide it
-    }
+    if (el.dataset.id != menuId) hideElement(el);
   });
 
   const subMenuContainer = document.getElementById("subMenuButtons");
@@ -39,38 +50,28 @@ function selectMainMenu(menuId) {
     subMenuContainer.appendChild(btn);
   });
 
-  const subMenuSection = document.getElementById("subMenuSection");
-  subMenuSection.classList.remove("hidden");
-  subMenuSection.classList.add("fade-in");
-
-  document.getElementById("backToMainBtn").classList.remove("hidden");
+  showElement(document.getElementById("subMenuSection"));
+  showElement(document.getElementById("backToMainBtn"));
 }
 
+// Handle submenu selection
 function selectSubMenu(subMenuId) {
   selectedSubMenu = subMenuId;
 
   const match = selectedMainMenu.subMenu.find(s => s.id === subMenuId);
   document.querySelectorAll("#subMenuButtons button").forEach(btn => {
-    if (btn.textContent !== match.name) {
-      btn.classList.add("fade-out");
-      setTimeout(() => btn.classList.add("hidden"), 300);
-    }
+    if (btn.textContent !== match.name) hideElement(btn);
   });
 
-  const changeBtn = document.getElementById("changeSubmenuBtn");
-  const optionSec = document.getElementById("optionsSection");
-
-  changeBtn.classList.remove("hidden");
-  changeBtn.classList.add("fade-in");
-
-  optionSec.classList.remove("hidden");
-  optionSec.classList.add("fade-in");
+  showElement(document.getElementById("changeSubmenuBtn"));
+  showElement(document.getElementById("optionsSection"));
 
   populateSelect("beanSelect", beans);
   populateSelect("milkSelect", milks);
   populateSelect("sizeSelect", sizes);
 }
 
+// Reset submenu view
 function resetSubmenu() {
   selectedSubMenu = null;
 
@@ -79,14 +80,15 @@ function resetSubmenu() {
     btn.classList.add("fade-in");
   });
 
-  document.getElementById("changeSubmenuBtn").classList.add("hidden");
-  document.getElementById("optionsSection").classList.add("hidden");
+  hideElement(document.getElementById("changeSubmenuBtn"));
+  hideElement(document.getElementById("optionsSection"));
 
   clearSelect("beanSelect");
   clearSelect("milkSelect");
   clearSelect("sizeSelect");
 }
 
+// Back to main menu
 function goBackToMainMenu() {
   selectedMainMenu = null;
   selectedSubMenu = null;
@@ -96,13 +98,14 @@ function goBackToMainMenu() {
     item.classList.add("fade-in");
   });
 
-  document.getElementById("subMenuSection").classList.add("hidden");
-  document.getElementById("optionsSection").classList.add("hidden");
-  document.getElementById("backToMainBtn").classList.add("hidden");
+  hideElement(document.getElementById("subMenuSection"));
+  hideElement(document.getElementById("optionsSection"));
+  hideElement(document.getElementById("backToMainBtn"));
 
   resetSubmenu();
 }
 
+// Populate select dropdown
 function populateSelect(selectId, list) {
   const select = document.getElementById(selectId);
   select.innerHTML = "";
@@ -115,10 +118,12 @@ function populateSelect(selectId, list) {
   });
 }
 
+// Clear select dropdown
 function clearSelect(id) {
   document.getElementById(id).innerHTML = "";
 }
 
+// Add item to order
 function addToOrder() {
   const beanId = document.getElementById("beanSelect").value;
   const milkId = document.getElementById("milkSelect").value;
@@ -147,6 +152,7 @@ function addToOrder() {
   goBackToMainMenu();
 }
 
+// Update order table
 function updateOrderTable() {
   const tbody = document.querySelector("#orderTable tbody");
   tbody.innerHTML = "";
@@ -174,12 +180,14 @@ function updateOrderTable() {
   });
 }
 
+// Remove item from order
 function removeItem(index) {
   orderItems.splice(index, 1);
   updateOrderTable();
   generateQRCode(orderItems.map(i => i.code));
 }
 
+// Generate QR code
 function generateQRCode(dataArray) {
   new QRious({
     element: document.getElementById("qrCanvas"),
