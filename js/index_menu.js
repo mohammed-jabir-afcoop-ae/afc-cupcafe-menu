@@ -1,6 +1,13 @@
 // ✨ Helper functions for consistent show/hide animations
 function showElement(el) {
+  if (!el) return;
+  // Remove hidden class if present
   el.classList.remove("hidden", "fade-out");
+  // Make sure the element is visible
+  el.style.display = "block";
+  // Force reflow to ensure animation triggers correctly
+  void el.offsetWidth;
+  // Add animation class
   el.classList.add("fade-in");
 }
 
