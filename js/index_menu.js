@@ -106,8 +106,7 @@ function goBackToMainMenu() {
   selectedSubMenu = null;
 
   document.querySelectorAll(".main-menu-item").forEach(item => {
-    item.classList.remove("hidden", "fade-out");
-    item.classList.add("fade-in");
+    showElement(item);
   });
 
   hideElement(document.getElementById("subMenuSection"));
