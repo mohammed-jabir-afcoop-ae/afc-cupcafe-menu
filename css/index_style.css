@@ -25,6 +25,19 @@ h1, h2, .btn, .menu-img + div {
   transform: scale(1);
 }
 
+.fade-then-hide {
+  animation: fadeOut 0.3s forwards;
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.hidden {
+  display: none !important;
+}
+
 /* Main menu styles */
 #mainMenuSection {
   display: flex;
