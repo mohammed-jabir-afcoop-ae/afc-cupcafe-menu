@@ -1,0 +1,17 @@
+[
+  {
+    "optionSetId": 1,
+    "name": "Bean_Milk_Size",
+    "optionIds": [1, 2, 3]
+  },
+  {
+    "optionSetId": 2,
+    "name": "Bean_Size",
+    "optionIds": [1, 3]
+  },
+  {
+    "optionSetId": 3,
+    "name": "Milk Only",
+    "optionIds": [2]
+  }
+]
