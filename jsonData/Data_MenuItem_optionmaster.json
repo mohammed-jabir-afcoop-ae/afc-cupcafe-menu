@@ -1,0 +1,23 @@
+[
+  {
+    "optionId": 1,
+    "name": "Bean",
+    "description": "Choose your preferred coffee beans",
+    "image": "img/option_bean.png",
+    "selectId": "beanSelect"
+  },
+  {
+    "optionId": 2,
+    "name": "Milk",
+    "description": "Choose milk type",
+    "image": "img/option_milk.png",
+    "selectId": "milkSelect"
+  },
+  {
+    "optionId": 3,
+    "name": "Size",
+    "description": "Select cup size",
+    "image": "img/option_size.png",
+    "selectId": "sizeSelect"
+  }
+]
