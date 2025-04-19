@@ -11,7 +11,17 @@
   },
   {
     "optionSetId": 3,
-    "name": "Milk Only",
-    "optionIds": [2]
+    "name": "Milk_Size",
+    "optionIds": [2, 3]
+  },
+  {
+    "optionSetId": 4,
+    "name": "Size_Only",
+    "optionIds": [3]
+  },
+  {
+    "optionSetId": 5,
+    "name": "No_Options",
+    "optionIds": []
   }
 ]
