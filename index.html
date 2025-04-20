@@ -32,22 +32,11 @@
 
     <!-- Option selectors -->
     <div id="optionsSection" style="display: none;">
-      <div class="mb-2">
-        <label for="beanSelect">Bean:</label>
-        <select id="beanSelect" class="form-select"></select>
-      </div>
-      <div class="mb-2">
-        <label for="milkSelect">Milk:</label>
-        <select id="milkSelect" class="form-select"></select>
-      </div>
-      <div class="mb-2">
-        <label for="sizeSelect">Size:</label>
-        <select id="sizeSelect" class="form-select"></select>
+      <div id="dynamicOptionsContainer" class="mb-2">
+        <!-- Option dropdowns will be dynamically inserted here -->
       </div>
       <button class="btn btn-success mt-2" onclick="addToOrder()">Add to Order</button>
     </div>
-
-
 
     <!-- Order Table -->
     <div class="mt-5">
