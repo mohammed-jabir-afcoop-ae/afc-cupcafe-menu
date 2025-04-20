@@ -4,20 +4,38 @@
     "name": "Bean",
     "description": "Choose your preferred coffee beans",
     "image": "img/option_bean.png",
-    "selectId": "beanSelect"
+    "selectId": "beanSelect",
+    "values": [
+      { "id": 101, "name": "Brazil", "description": "Rich and nutty flavor.", "image": "img/beans/brazil.png" },
+      { "id": 102, "name": "Colombia", "description": "Smooth and balanced taste.", "image": "img/beans/colombia.png" },
+      { "id": 103, "name": "Ethiopia", "description": "Fruity and floral notes.", "image": "img/beans/ethiopia.png" }
+    ]
   },
   {
     "optionId": 2,
     "name": "Milk",
     "description": "Choose milk type",
     "image": "img/option_milk.png",
-    "selectId": "milkSelect"
+    "selectId": "milkSelect",
+    "values": [
+      { "id": 201, "name": "Fullfat Milk", "description": "Creamy and rich.", "image": "img/milks/fullfat.png" },
+      { "id": 202, "name": "Lowfat Milk", "description": "Lower in fat and calories.", "image": "img/milks/lowfat.png" },
+      { "id": 203, "name": "Soy Milk", "description": "Plant-based alternative.", "image": "img/milks/soy.png" },
+      { "id": 204, "name": "Almond Milk", "description": "Nutty and dairy-free.", "image": "img/milks/almond.png" },
+      { "id": 205, "name": "Skim Milk", "description": "Fat-free option.", "image": "img/milks/skim.png" },
+      { "id": 206, "name": "Oats Milk", "description": "Smooth and slightly sweet.", "image": "img/milks/oats.png" },
+      { "id": 207, "name": "Coconut Milk", "description": "Tropical and creamy.", "image": "img/milks/coconut.png" }
+    ]
   },
   {
     "optionId": 3,
     "name": "Size",
     "description": "Select cup size",
     "image": "img/option_size.png",
-    "selectId": "sizeSelect"
+    "selectId": "sizeSelect",
+    "values": [
+      { "id": 301, "name": "Tall", "description": "Small size (12oz).", "image": "img/sizes/tall.png" },
+      { "id": 302, "name": "Grande", "description": "Medium size (16oz).", "image": "img/sizes/grande.png" }
+    ]
   }
 ]
