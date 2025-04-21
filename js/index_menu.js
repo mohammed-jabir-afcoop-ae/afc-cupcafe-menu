@@ -58,6 +58,7 @@ function selectMainMenu(menuId) {
     const btn = document.createElement("button");
     btn.className = "btn btn-primary w-100 mb-2 btn-submenu fade-in";
     btn.textContent = sm.name;
+    btn.dataset.id = sm.id;
     btn.onclick = () => selectSubMenu(sm.id);
     subMenuContainer.appendChild(btn);
   });
@@ -72,7 +73,7 @@ async function selectSubMenu(subMenuId) {
 
   const match = selectedMainMenu.subMenu.find(s => s.id === subMenuId);
   document.querySelectorAll("#subMenuButtons button").forEach(btn => {
-    if (btn.textContent !== match.name) hideElement(btn);
+    if (btn.dataset.id != subMenuId) hideElement(btn);
   });
 
   showElement(document.getElementById("changeSubmenuBtn"));
@@ -83,12 +84,20 @@ async function selectSubMenu(subMenuId) {
 
 async function renderDynamicOptions(optionSetId) {
   const container = document.getElementById("dynamicOptionsContainer");
-  container.innerHTML = "";
+  container.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>';
 
-  const [optionMasterData, optionSetMasterData] = await Promise.all([
-    fetch("json/Data_MenuItem_optionmaster.json").then(res => res.json()),
-    fetch("json/Data_MenuItem_optionsetmaster.json").then(res => res.json())
-  ]);
+  let optionMasterData = [], optionSetMasterData = [];
+  
+  try {
+    [optionMasterData, optionSetMasterData] = await Promise.all([
+      fetch("json/Data_MenuItem_optionmaster.json").then(res => res.json()),
+      fetch("json/Data_MenuItem_optionsetmaster.json").then(res => res.json())
+    ]);
+  } catch (err) {
+    console.error("Failed to load option data:", err);
+    return;
+  }
+
 
   const optionSet = optionSetMasterData.find(set => set.optionSetId === optionSetId);
   if (!optionSet) return;
@@ -153,22 +162,15 @@ function goBackToMainMenu() {
   hideElement(document.getElementById("backToMainBtn"));
 
   resetSubmenu();
-}
 
-// Populate select dropdown
-function populateSelect(selectId, list) {
-  const select = document.getElementById(selectId);
-  select.innerHTML = "";
-  if (!Array.isArray(list)) return;
-  list.forEach(opt => {
-    const option = document.createElement("option");
-    option.value = opt.id;
-    option.textContent = opt.name;
-    select.appendChild(option);
-  });
-}
+    // Clear any previous submenu buttons
+  const subMenuContainer = document.getElementById("subMenuButtons");
+  if (subMenuContainer) subMenuContainer.innerHTML = "";
 
-// Clear select dropdown
-function clearSelect(id) {
-  document.getElementById(id).innerHTML = "";
+  // Clear dynamic options explicitly (already done in resetSubmenu, but doesn't hurt)
+  const optionsContainer = document.getElementById("dynamicOptionsContainer");
+  if (optionsContainer) optionsContainer.innerHTML = "";
+
+  // Hide change submenu button if still visible (just in case)
+  hideElement(document.getElementById("changeSubmenuBtn"));
 }
