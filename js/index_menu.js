@@ -67,7 +67,7 @@ function selectMainMenu(menuId) {
 }
 
 // Handle submenu selection
-function selectSubMenu(subMenuId) {
+async function selectSubMenu(subMenuId) {
   selectedSubMenu = subMenuId;
 
   const match = selectedMainMenu.subMenu.find(s => s.id === subMenuId);
@@ -78,10 +78,49 @@ function selectSubMenu(subMenuId) {
   showElement(document.getElementById("changeSubmenuBtn"));
   showElement(document.getElementById("optionsSection"));
 
-  populateSelect("beanSelect", beans);
-  populateSelect("milkSelect", milks);
-  populateSelect("sizeSelect", sizes);
+  await renderDynamicOptions(match.optionSetId); 
 }
+
+async function renderDynamicOptions(optionSetId) {
+  const container = document.getElementById("dynamicOptionsContainer");
+  container.innerHTML = "";
+
+  const [optionMasterData, optionSetMasterData] = await Promise.all([
+    fetch("json/Data_MenuItem_optionmaster.json").then(res => res.json()),
+    fetch("json/Data_MenuItem_optionsetmaster.json").then(res => res.json())
+  ]);
+
+  const optionSet = optionSetMasterData.find(set => set.optionSetId === optionSetId);
+  if (!optionSet) return;
+
+  optionSet.optionIds.forEach(optionId => {
+    const option = optionMasterData.find(opt => opt.optionId === optionId);
+    if (!option) return;
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "mb-2";
+
+    const label = document.createElement("label");
+    label.setAttribute("for", option.selectId);
+    label.innerText = option.name + ":";
+
+    const select = document.createElement("select");
+    select.id = option.selectId;
+    select.className = "form-select";
+
+    option.values.forEach(val => {
+      const opt = document.createElement("option");
+      opt.value = val.id;
+      opt.textContent = val.name;
+      select.appendChild(opt);
+    });
+
+    wrapper.appendChild(label);
+    wrapper.appendChild(select);
+    container.appendChild(wrapper);
+  });
+}
+
 
 // Reset submenu view
 function resetSubmenu() {
@@ -94,10 +133,11 @@ function resetSubmenu() {
   hideElement(document.getElementById("changeSubmenuBtn"));
   hideElement(document.getElementById("optionsSection"));
 
-  clearSelect("beanSelect");
-  clearSelect("milkSelect");
-  clearSelect("sizeSelect");
+  // Clear dynamically generated options
+  const container = document.getElementById("dynamicOptionsContainer");
+  if (container) container.innerHTML = "";
 }
+
 
 // Back to main menu
 function goBackToMainMenu() {
@@ -131,77 +171,4 @@ function populateSelect(selectId, list) {
 // Clear select dropdown
 function clearSelect(id) {
   document.getElementById(id).innerHTML = "";
-}
-
-// Add item to order
-function addToOrder() {
-  const beanId = document.getElementById("beanSelect").value;
-  const milkId = document.getElementById("milkSelect").value;
-  const sizeId = document.getElementById("sizeSelect").value;
-
-  if (!selectedSubMenu || !beanId || !milkId || !sizeId) {
-    alert("Please select all options.");
-    return;
-  }
-
-  const subMenu = selectedMainMenu.subMenu.find(sm => sm.id === selectedSubMenu);
-  const itemCode = `${selectedSubMenu}${beanId}${milkId}${sizeId}`;
-
-  const row = {
-    main: selectedMainMenu.name,
-    sub: subMenu.name,
-    bean: beans.find(b => b.id == beanId).name,
-    milk: milks.find(m => m.id == milkId).name,
-    size: sizes.find(s => s.id == sizeId).name,
-    code: itemCode
-  };
-
-  orderItems.push(row);
-  updateOrderTable();
-  generateQRCode(orderItems.map(i => i.code));
-  goBackToMainMenu();
-}
-
-// Update order table
-function updateOrderTable() {
-  const tbody = document.querySelector("#orderTable tbody");
-  tbody.innerHTML = "";
-  orderItems.forEach((item, index) => {
-    const row = document.createElement("tr");
-    row.classList.add("fade-smooth", "show");
-    row.innerHTML = `
-      <td>${index + 1}</td>
-      <td>
-        <strong>${item.sub}</strong><br/>
-        <div class="small-option">Bean: ${item.bean}</div>
-        <div class="small-option">Milk: ${item.milk}</div>
-        <div class="small-option">Size: ${item.size}</div>
-        <div class="small-option text-muted">Code: ${item.code}</div>
-      </td>
-      <td class="d-none">${item.main}</td>
-      <td class="d-none">${item.sub}</td>
-      <td class="d-none">${item.bean}</td>
-      <td class="d-none">${item.milk}</td>
-      <td class="d-none">${item.size}</td>
-      <td class="d-none">${item.code}</td>
-      <td><button class="btn btn-sm btn-warning" onclick="removeItem(${index})">X</button></td>
-    `;
-    tbody.appendChild(row);
-  });
-}
-
-// Remove item from order
-function removeItem(index) {
-  orderItems.splice(index, 1);
-  updateOrderTable();
-  generateQRCode(orderItems.map(i => i.code));
-}
-
-// Generate QR code
-function generateQRCode(dataArray) {
-  new QRious({
-    element: document.getElementById("qrCanvas"),
-    size: 200,
-    value: dataArray.join("\n")
-  });
 }
