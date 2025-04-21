@@ -90,8 +90,8 @@ async function renderDynamicOptions(optionSetId) {
   
   try {
     [optionMasterData, optionSetMasterData] = await Promise.all([
-      fetch("json/Data_MenuItem_optionmaster.json").then(res => res.json()),
-      fetch("json/Data_MenuItem_optionsetmaster.json").then(res => res.json())
+      fetch("jsonData/Data_MenuItem_optionmaster.json").then(res => res.json()),
+      fetch("jsonData/Data_MenuItem_optionsetmaster.json").then(res => res.json())
     ]);
   } catch (err) {
     console.error("Failed to load option data:", err);
