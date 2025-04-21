@@ -98,7 +98,9 @@ async function renderDynamicOptions(optionSetId) {
     return;
   }
 
-
+  //disable loading 
+  container.innerHTML = '';
+  
   const optionSet = optionSetMasterData.find(set => set.optionSetId === optionSetId);
   if (!optionSet) return;
 
