@@ -11,7 +11,7 @@ function addToOrder() {
 
   for (const select of selects) {
     const optionId = select.value;
-    const optionName = select.previousElementSibling.innerText.replace(":", "");
+    const optionName = select.previousElementSibling.innerText.replace(":", "").trim();
     const optionLabel = select.options[select.selectedIndex].text;
 
     if (!optionId) {
@@ -19,20 +19,24 @@ function addToOrder() {
       return;
     }
 
-    options.push({ name: optionName, value: optionLabel, id: optionId });
-    code += optionId; // part of unique item code
+    options.push({ id: optionId, name: optionName, value: optionLabel });
+    code += optionId;
   }
 
   const subMenu = selectedMainMenu.subMenu.find(sm => sm.id === selectedSubMenu);
 
-  const row = {
+  const orderItem = {
     main: selectedMainMenu.name,
     sub: subMenu.name,
-    options: options,     // array of { name, value, id }
-    code: code
+    options: options,
+    code: code,
+    json: null // we'll assign JSON here
   };
 
-  orderItems.push(row);
+  // Generate and attach stringified JSON to the item
+  orderItem.json = JSON.stringify(orderItem);
+
+  orderItems.push(orderItem);
   updateOrderTable();
   generateQRCode(orderItems.map(i => i.code));
   goBackToMainMenu();
@@ -46,13 +50,10 @@ function updateOrderTable() {
     const row = document.createElement("tr");
     row.classList.add("fade-smooth", "show");
 
-    // Generate formatted options block
+    // Generate readable options
     const optionsHtml = item.options.map(opt => {
       return `<div class="small-option">${opt.name}: ${opt.value}</div>`;
     }).join("");
-
-    // Create JSON representation for hidden export/debug/etc.
-    const itemJson = JSON.stringify(item);
 
     row.innerHTML = `
       <td>${index + 1}</td>
@@ -64,7 +65,7 @@ function updateOrderTable() {
       <td class="d-none">${item.main}</td>
       <td class="d-none">${item.sub}</td>
       <td class="d-none">${item.code}</td>
-      <td class="d-none">${itemJson}</td> <!-- new hidden column -->
+      <td class="d-none">${item.json}</td>
       <td>
         <button class="btn btn-sm btn-warning" onclick="removeItem(${index})">X</button>
       </td>
