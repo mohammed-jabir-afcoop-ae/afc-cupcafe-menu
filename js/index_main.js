@@ -1,4 +1,4 @@
-let menuData = [], beans = [], milks = [], sizes = [];
+let menuData = [];
 let selectedMainMenu = null, selectedSubMenu = null;
 let orderItems = [];
 
@@ -16,14 +16,7 @@ async function loadJSON(path) {
 async function init() {
   try {
     const menuJSON = await loadJSON("jsonData/Data_MenuItem_menu.json");
-    const beansJSON = await loadJSON("jsonData/Data_MenuOption_bean.json");
-    const milkJSON = await loadJSON("jsonData/Data_MenuOption_milk.json");
-    const sizeJSON = await loadJSON("jsonData/Data_MenuOption_size.json");
-
     menuData = menuJSON.menuItems ?? menuJSON;
-    beans = beansJSON.beans ?? [];
-    milks = milkJSON.milks ?? [];
-    sizes = sizeJSON.sizes ?? [];
 
     renderMainMenu();
   } catch (err) {
