@@ -1,40 +1,35 @@
 //add item to order
 function addToOrder() {
   if (!selectedSubMenu) {
-    alert("Please select a submenu.");
+    alert("Please select a submenu item.");
     return;
   }
 
-  const optionsContainer = document.getElementById("dynamicOptionsContainer");
-  const selects = optionsContainer.querySelectorAll("select");
+  const selects = document.querySelectorAll("#dynamicOptionsContainer select");
+  const options = [];
+  let code = selectedSubMenu;
 
-  const selections = {};
-  let itemCode = `${selectedSubMenu}`;
-  let missing = false;
+  for (const select of selects) {
+    const optionId = select.value;
+    const optionName = select.previousElementSibling.innerText.replace(":", "");
+    const optionLabel = select.options[select.selectedIndex].text;
 
-  selects.forEach(select => {
-    const label = select.dataset.label;
-    const value = select.value;
-    if (!value) {
-      alert(`Please select ${label}`);
-      missing = true;
+    if (!optionId) {
+      alert(`Please select an option for ${optionName}`);
       return;
     }
 
-    const text = select.options[select.selectedIndex].text;
-    selections[label] = text;
-    itemCode += value;
-  });
-
-  if (missing) return;
+    options.push({ name: optionName, value: optionLabel, id: optionId });
+    code += optionId; // part of unique item code
+  }
 
   const subMenu = selectedMainMenu.subMenu.find(sm => sm.id === selectedSubMenu);
 
   const row = {
     main: selectedMainMenu.name,
     sub: subMenu.name,
-    ...selections,
-    code: itemCode
+    options: options,     // array of { name, value, id }
+    code: code
   };
 
   orderItems.push(row);
@@ -43,35 +38,36 @@ function addToOrder() {
   goBackToMainMenu();
 }
 
-
-// Update order table
 function updateOrderTable() {
   const tbody = document.querySelector("#orderTable tbody");
   tbody.innerHTML = "";
 
   orderItems.forEach((item, index) => {
-    const optionDetails = Object.entries(item)
-      .filter(([key]) => !["main", "sub", "code"].includes(key))
-      .map(([key, val]) => `<div class="small-option">${key}: ${val}</div>`)
-      .join("");
-
     const row = document.createElement("tr");
     row.classList.add("fade-smooth", "show");
+
+    // Generate formatted options block
+    const optionsHtml = item.options.map(opt => {
+      return `<div class="small-option">${opt.name}: ${opt.value}</div>`;
+    }).join("");
+
+    // Create JSON representation for hidden export/debug/etc.
+    const itemJson = JSON.stringify(item);
+
     row.innerHTML = `
       <td>${index + 1}</td>
       <td>
         <strong>${item.sub}</strong><br/>
-        ${optionDetails}
+        ${optionsHtml}
         <div class="small-option text-muted">Code: ${item.code}</div>
       </td>
       <td class="d-none">${item.main}</td>
       <td class="d-none">${item.sub}</td>
-      ${Object.entries(item)
-        .filter(([key]) => !["main", "sub", "code"].includes(key))
-        .map(([key, val]) => `<td class="d-none">${val}</td>`)
-        .join("")}
       <td class="d-none">${item.code}</td>
-      <td><button class="btn btn-sm btn-warning" onclick="removeItem(${index})">X</button></td>
+      <td class="d-none">${itemJson}</td> <!-- new hidden column -->
+      <td>
+        <button class="btn btn-sm btn-warning" onclick="removeItem(${index})">X</button>
+      </td>
     `;
     tbody.appendChild(row);
   });
